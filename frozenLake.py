@@ -4,15 +4,20 @@ import numpy as np
 import matplotlib.pyplot as plt
 import json
 
-def ejecutar(iteraciones=1000, mostrar=False):
+def ejecutar(iteraciones=1000, mostrar=False, entrenamiento=False):
     flag = False
 
     # Crear el ambiente
     env = gym.make('FrozenLake-v1', desc=generate_random_map(size=4), is_slippery=True, render_mode='human' if mostrar else None)
 
-    # Inicializar la tabla para el valor de q segun el numero de estados y acciones
-    q = np.zeros([env.observation_space.n, env.action_space.n]) # 16 estados y 4 acciones
-
+    # Inicializar la tabla para el valor de q segun el numero de estados y acciones solo si se va a entrenar el modelo
+    if(entrenamiento):
+        q = np.zeros([env.observation_space.n, env.action_space.n]) # 16 estados y 4 acciones
+    else:
+        # Cargar la tabla q desde un archivo json
+        with open("frozen_lake4x4.json", "r") as f:
+            q = np.array(json.load(f))
+    
     # Parametros de aprendizaje
     tasaAprendizaje = 0.8 # alpha
     descuento = 0.95 # gamma, debe ser alto ya que solo el ultimo estado es el que tiene recompensa
@@ -66,10 +71,10 @@ def ejecutar(iteraciones=1000, mostrar=False):
     env.close()
 
 
-    # Graficar la recompensa acumulada por cada conjunto de iteraciones (cada 10 iteraciones)
+    # Graficar la recompensa acumulada por cada conjunto de iteraciones (cada 100 iteraciones)
     sum_rewards = np.zeros(iteraciones)
     for t in range(iteraciones):
-        sum_rewards[t] = np.sum(recompensaPorIteracion[max(0, t-10):(t+1)])
+        sum_rewards[t] = np.sum(recompensaPorIteracion[max(0, t-100):(t+1)])
     plt.plot(sum_rewards)
     plt.xlabel('Iteraciones')
     plt.ylabel('Recompensa acumulada')
@@ -84,4 +89,5 @@ def ejecutar(iteraciones=1000, mostrar=False):
 if __name__ == "__main__":
     iteraciones = 10000 # numero de iteraciones para entrenar el modelo
     mostrar = False
-    ejecutar(iteraciones, mostrar)
+    entrenamiento = False
+    ejecutar(iteraciones, mostrar, entrenamiento)
