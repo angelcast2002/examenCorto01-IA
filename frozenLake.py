@@ -70,25 +70,24 @@ def ejecutar(iteraciones=1000, mostrar=False, entrenamiento=False):
     # Cerrar el ambiente
     env.close()
 
-
-    # Graficar la recompensa acumulada por cada conjunto de iteraciones (cada 100 iteraciones)
-    sum_rewards = np.zeros(iteraciones)
-    for t in range(iteraciones):
-        sum_rewards[t] = np.sum(recompensaPorIteracion[max(0, t-100):(t+1)])
-    plt.plot(sum_rewards)
-    plt.xlabel('Iteraciones')
-    plt.ylabel('Recompensa acumulada')
-    plt.title('Recompensa acumulada por cada conjunto de iteraciones')
-    plt.savefig('frozen_lake4x4.png')
-
-    # Guardar la tabla q en un archivo json, donde se guardan los valores de q para cada estado y accion
     if entrenamiento:
+        # Graficar la recompensa acumulada por cada conjunto de iteraciones (cada 100 iteraciones)
+        sum_rewards = np.zeros(iteraciones)
+        for t in range(iteraciones):
+            sum_rewards[t] = np.sum(recompensaPorIteracion[max(0, t-100):(t+1)])
+        plt.plot(sum_rewards)
+        plt.xlabel('Iteraciones')
+        plt.ylabel('Recompensa acumulada')
+        plt.title('Recompensa acumulada por cada conjunto de iteraciones')
+        plt.savefig('frozen_lake4x4.png')
+
+        # Guardar la tabla q en un archivo json, donde se guardan los valores de q para cada estado y accion
         with open("frozen_lake4x4.json", "w") as f:
             q_serializable = q.tolist()
             json.dump(q_serializable, f)
 
 if __name__ == "__main__":
     iteraciones = 2 # numero de iteraciones para entrenar el modelo
-    mostrar = True
+    mostrar = False
     entrenamiento = False
     ejecutar(iteraciones, mostrar, entrenamiento)
