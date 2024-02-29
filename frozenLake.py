@@ -82,12 +82,13 @@ def ejecutar(iteraciones=1000, mostrar=False, entrenamiento=False):
     plt.savefig('frozen_lake4x4.png')
 
     # Guardar la tabla q en un archivo json, donde se guardan los valores de q para cada estado y accion
-    with open("frozen_lake4x4.json", "w") as f:
-        q_serializable = q.tolist()
-        json.dump(q_serializable, f)
+    if entrenamiento:
+        with open("frozen_lake4x4.json", "w") as f:
+            q_serializable = q.tolist()
+            json.dump(q_serializable, f)
 
 if __name__ == "__main__":
-    iteraciones = 10000 # numero de iteraciones para entrenar el modelo
-    mostrar = False
+    iteraciones = 2 # numero de iteraciones para entrenar el modelo
+    mostrar = True
     entrenamiento = False
     ejecutar(iteraciones, mostrar, entrenamiento)
